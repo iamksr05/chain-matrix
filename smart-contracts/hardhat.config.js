@@ -45,7 +45,7 @@ module.exports = {
     },
     // Flare Coston Testnet
     coston: {
-      url: process.env.COSTON_RPC || "https://coston-api.flare.network/ext/C/rpc",
+      url: process.env.COSTON_RPC || "https://coston2-api.flare.network/ext/C/rpc",
       chainId: 114,
       accounts: validatePrivateKey(process.env.DEPLOYER_KEY) ? [validatePrivateKey(process.env.DEPLOYER_KEY)] : [],
     },

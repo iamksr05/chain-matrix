@@ -33,6 +33,8 @@ const COINS = [
     }
 ];
 
+import config from "../config";
+
 export default function LiveCharts() {
     const navigate = useNavigate();
     const [prices, setPrices] = useState({});
@@ -42,7 +44,7 @@ export default function LiveCharts() {
         const fetchPrices = async () => {
             try {
                 const query = COINS.map(c => c.symbol).join(",");
-                const res = await fetch(`http://localhost:3000/api/ftso/prices?symbols=${query}`);
+                const res = await fetch(`${config.apiUrl}/api/ftso/prices?symbols=${query}`);
                 const data = await res.json();
 
                 setPrices(prev => {
