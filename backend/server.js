@@ -14,6 +14,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Root route for health check
+app.get('/', (req, res) => {
+  res.send('Flare Backend Server is Running! 🚀');
+});
+
 // Initialize Supabase client
 const supabase = createClient(
   process.env.SUPABASE_URL || '',
@@ -46,7 +51,7 @@ const sponsorWallet = process.env.SPONSOR_WALLET_PRIVATE_KEY
 app.get('/api/ftso/convert-usd-to-token', async (req, res) => {
   try {
     const { usdAmount, tokenSymbol } = req.query;
-    
+
     if (!usdAmount || !tokenSymbol) {
       return res.status(400).json({ error: 'usdAmount and tokenSymbol required' });
     }
@@ -67,7 +72,7 @@ app.get('/api/ftso/convert-usd-to-token', async (req, res) => {
 
     const rate = mockRates[tokenSymbol.toUpperCase()] || 1;
     const tokenAmount = usd / rate;
-    
+
     // Add 5% buffer for volatility and gas
     const buffer = tokenAmount * 0.05;
     const totalAmount = tokenAmount + buffer;
@@ -101,7 +106,7 @@ app.get('/api/ftso/convert-usd-to-token', async (req, res) => {
 app.post('/api/fassets/verify-bridge', async (req, res) => {
   try {
     const { taskId, bridgeTx, fassetType } = req.body;
-    
+
     if (!taskId || !bridgeTx || !fassetType) {
       return res.status(400).json({ error: 'taskId, bridgeTx, and fassetType required' });
     }
@@ -110,15 +115,15 @@ app.post('/api/fassets/verify-bridge', async (req, res) => {
     // For BTC: verify BTC tx on Bitcoin network
     // For XRP: verify XRP tx on XRP Ledger
     // Then check FAsset mint proof on Flare
-    
+
     const verified = true; // Mock: always verified in dev
-    
+
     // Mock FAsset token addresses
     const fassetAddresses = {
       BTC: process.env.FASSET_BTC_ADDR || '0x1234567890123456789012345678901234567890',
       XRP: process.env.FASSET_XRP_ADDR || '0x0987654321098765432109876543210987654321',
     };
-    
+
     const tokenAddress = fassetAddresses[fassetType.toUpperCase()] || '0x0';
 
     // Update Supabase task with bridge info
@@ -155,18 +160,18 @@ app.post('/api/fassets/verify-bridge', async (req, res) => {
 app.post('/api/fdc/submit-proof', async (req, res) => {
   try {
     const { taskId, conditionHash, proofData, signature } = req.body;
-    
+
     if (!taskId || !conditionHash) {
       return res.status(400).json({ error: 'taskId and conditionHash required' });
     }
 
     // Verify proof signature (in production, verify against FDC oracle key)
     // For now, accept if signature matches expected format
-    
+
     // Update Supabase: mark submission as verified
     const { data: task } = await supabase
       .from('tasks')
-      .update({ 
+      .update({
         submission_verified: true,
         fdc_condition_hash: conditionHash,
         fdc_proof_data: JSON.stringify(proofData),
@@ -231,7 +236,7 @@ app.post('/api/fdc/submit-proof', async (req, res) => {
 app.get('/api/fdc/register-condition', async (req, res) => {
   try {
     const { taskId } = req.query;
-    
+
     if (!taskId) {
       return res.status(400).json({ error: 'taskId required' });
     }
@@ -271,7 +276,7 @@ app.get('/api/fdc/register-condition', async (req, res) => {
 app.post('/api/smart-account/sponsor-tx', async (req, res) => {
   try {
     const { to, data, value, userAddress } = req.body;
-    
+
     if (!to || !data || !userAddress) {
       return res.status(400).json({ error: 'to, data, and userAddress required' });
     }
@@ -326,13 +331,17 @@ app.get('/health', (req, res) => {
 // ============================================================================
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`🚀 Flare backend server running on port ${PORT}`);
-  console.log(`   FTSO: /api/ftso/convert-usd-to-token`);
-  console.log(`   FAssets: /api/fassets/verify-bridge`);
-  console.log(`   FDC: /api/fdc/submit-proof`);
-  console.log(`   Smart Accounts: /api/smart-account/sponsor-tx`);
-});
+
+// Only start the server if not running on Vercel
+if (process.env.VERCEL !== '1') {
+  app.listen(PORT, () => {
+    console.log(`🚀 Flare backend server running on port ${PORT}`);
+    console.log(`   FTSO: /api/ftso/convert-usd-to-token`);
+    console.log(`   FAssets: /api/fassets/verify-bridge`);
+    console.log(`   FDC: /api/fdc/submit-proof`);
+    console.log(`   Smart Accounts: /api/smart-account/sponsor-tx`);
+  });
+}
 
 export default app;
 
