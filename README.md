@@ -1,56 +1,88 @@
 # ChainMatrix
 
-**The First Decentralized Freight & Freelancing Marketplace on the Flare Network.**
+**The First Decentralized Freight & Freelancing Marketplace on the Flare Network**
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Status](https://img.shields.io/badge/status-active-success.svg)
 ![Network](https://img.shields.io/badge/network-Flare-orange.svg)
 
-ChainMatrix is a next-generation decentralized application (dApp) that revolutionizes how talent is hired and how bounties are settled. Powered by the **Flare Network**, it utilizes **Smart Accounts** for gasless transactions, the **FTSO (Flare Time Series Oracle)** for real-time price feeds, and the **FDC (Flare Data Connector)** for trustless cross-chain verification.
+---
+
+## 🟢 Project Overview
+
+ChainMatrix is an innovative decentralized marketplace that empowers freight shipping and freelancing through blockchain technology. By leveraging the Flare Network, ChainMatrix introduces trustless transactions, escrow, cross-chain payments, and gasless user onboarding—all via modern, secure, and scalable architecture.
+
+> **Demo:** [View Live Demo](https://chainmatrix-demo-link.com) <!-- Replace with actual demo link -->
+
+---
+
+## 📐 Architecture & API Overview
+
+- **Frontend:** React + Vite, styled with Tailwind CSS and animated with Framer Motion for a bold "Antigravity" themed UI.
+- **Backend:** Node.js & Express, serving RESTful APIs for authentication, pricing oracle, escrow management, FTSO data, and Flare Data Connector (FDC) integration.
+- **Database:** Supabase used for storing user profiles, job postings, bounties, and transactional metadata.
+- **Smart Contracts:** Deployed on Flare/Coston2, responsible for escrow, payment settlements, and cross-chain verification.
+- **Auth:** Wallet-based (Privy) and social login (Clerk) options.
+- **APIs Used:**
+  - **FTSO**: Fetch live price data (BTC, XRP, FLR).
+  - **FDC**: Enable trustless verification of payments from major blockchains.
+  - **Supabase REST**: User data, jobs, escrow status.
+  - **Privy/Clerk**: Authentication.
+  - **Escrow Smart Contracts**: Lock, release, and dispute funds.
+  <!-- Add more if you use additional APIs -->
+
+**Flow Diagram:**
+
+```plaintext
+[ User ] <---> [ Frontend App ] <---> [ Backend API ] <---> [ Flare Network (FTSO & FDC) ]
+  |                                            |                                 |
+[ Wallet (Privy/Clerk) ]           [ Supabase Database ]        [ Smart Contracts (Escrow, Payments) ]
+```
 
 ---
 
 ## 🚀 Key Features
 
-*   **🛡️ Trustless Escrow**: Funds are locked in smart contracts and only released when work is verified.
-*   **📈 Live Market Intelligence**: Real-time crypto asset pricing (BTC, XRP, FLR) powered by the FTSO.
-*   **🌉 Cross-Chain Payments**: Verify transactions from Bitcoin, XRP, and other chains using the Flare Data Connector (FDC).
-*   **⛽ Gasless Ease**: Users interact with the blockchain without holding native tokens, thanks to Account Abstraction (Smart Accounts).
-*   **🎨 Premium UI**: A stunning, "Antigravity" themed interface built with React, Tailwind, and Framer Motion.
+*   **🛡️ Trustless Escrow:** Secure fund locking via smart contracts, released only upon verified work completion.
+*   **📈 Live Market Intelligence:** Real-time asset pricing (BTC, XRP, FLR) via FTSO oracle integration.
+*   **🌉 Cross-Chain Payments:** Supports on-chain verification for Bitcoin, XRP, and more through the FDC.
+*   **⛽ Gasless Transactions:** Seamless user experience—no need for native Flare tokens due to Account Abstraction.
+*   **🎨 Premium UI/UX:** Futuristic interface, responsive and animated for modern users.
 
 ---
 
-## 🛠️ Technology Stack
+## 🧩 Technology Stack
 
 ### Frontend
-*   **Framework**: [Vite](https://vitejs.dev/) + [React](https://reactjs.org/)
-*   **Styling**: [Tailwind CSS](https://tailwindcss.com/) + Vanilla CSS
-*   **Animation**: [Framer Motion](https://www.framer.com/motion/)
-*   **Auth**: [Privy](https://www.privy.io/) (Wallet) + [Clerk](https://clerk.com/) (Social)
-*   **Icons**: [Lucide React](https://lucide.dev/)
+- **Framework:** [Vite](https://vitejs.dev/) + [React](https://react.dev/)
+- **Styling:** [Tailwind CSS](https://tailwindcss.com/) + CSS
+- **Animation:** [Framer Motion](https://framer.com/motion/)
+- **Icons:** [Lucide React](https://lucide.dev/)
+- **Authentication:** [Privy](https://www.privy.io/) (Web3), [Clerk](https://clerk.com/) (social login)
 
 ### Backend
-*   **Runtime**: [Node.js](https://nodejs.org/)
-*   **Server**: [Express](https://expressjs.com/)
-*   **Database**: [Supabase](https://supabase.com/)
-*   **Blockchain Interaction**: [Ethers.js v6](https://docs.ethers.org/v6/)
+- **Runtime:** [Node.js](https://nodejs.org/)
+- **Server:** [Express](https://expressjs.com/)
+- **Database:** [Supabase](https://supabase.com/)
+- **Blockchain Interaction:** [Ethers.js v6](https://docs.ethers.org/v6/)
+- **APIs:** FTSO (price oracle), FDC (cross-chain validation)
 
 ### Smart Contracts
-*   **Network**: Flare / Coston2 Testnet
-*   **Framework**: [Hardhat](https://hardhat.org/)
-*   **Language**: Solidity 0.8.x
+- **Network:** Flare & Coston2 Testnet
+- **Framework:** [Hardhat](https://hardhat.org/)
+- **Language:** Solidity 0.8.x
 
 ---
 
-## 📂 Project Structure
+## 🗂️ Project Structure
 
 ```bash
 chain-matrix/
-├── backend/            # Express server for FTSO/FDC/FAssets API
-├── frontend/           # React + Vite application
-├── smart-contracts/    # Hardhat project for Escrow & Token contracts
-├── supabase/           # Database migrations and config
-└── README.md           # You are here
+├── backend/            # Express API server (FTSO/FDC/Supabase integration)
+├── frontend/           # React + Vite client ("Antigravity" UI)
+├── smart-contracts/    # Hardhat project (Escrow, Payment Contracts)
+├── supabase/           # DB schema, migration files, config
+└── README.md           # This documentation
 ```
 
 ---
@@ -58,31 +90,33 @@ chain-matrix/
 ## ⚡ Getting Started
 
 ### Prerequisites
-*   Node.js (v18+)
-*   Git
-*   A Flare/Coston2 wallet private key (for deployment)
+
+- Node.js (v18+)
+- Git
+- Flare/Coston2 wallet private key (for contract deployment)
 
 ### 1. Installation
-
-Clone the repository and install dependencies for all workspaces:
 
 ```bash
 git clone https://github.com/yourusername/chain-matrix.git
 cd chain-matrix
 
-# Install Frontend Dependencies
-cd frontend && npm install
+# Frontend
+cd frontend
+npm install
 
-# Install Backend Dependencies
-cd ../backend && npm install
+# Backend
+cd ../backend
+npm install
 
-# Install Smart Contract Dependencies
-cd ../smart-contracts && npm install
+# Smart Contracts
+cd ../smart-contracts
+npm install
 ```
 
 ### 2. Environment Setup
 
-Create `.env` files in each directory based on the examples.
+Add `.env` files in each workspace as shown below:
 
 **Backend (`backend/.env`):**
 ```env
@@ -102,23 +136,23 @@ VITE_PRIVY_APP_ID=your_privy_id
 
 ### 3. Running Locally
 
-Run each component in a separate terminal:
+Run each component in separate terminals:
 
 **Backend:**
 ```bash
 cd backend
 npm run dev
-# Server running on http://localhost:3000
+# Server runs at http://localhost:3000
 ```
 
 **Frontend:**
 ```bash
 cd frontend
 npm run dev
-# App running on http://localhost:5173
+# App at http://localhost:5173
 ```
 
-**Smart Contracts (Local Node):**
+**Smart Contracts (Hardhat node):**
 ```bash
 cd smart-contracts
 npx hardhat node
@@ -126,20 +160,46 @@ npx hardhat node
 
 ---
 
+## 📖 API Reference
+
+| Endpoint                        | Method | Description                           |
+| ------------------------------- | ------ | ------------------------------------- |
+| `/api/ftso/prices`              | GET    | Returns live FTSO price data          |
+| `/api/fdc/verify-tx`            | POST   | Cross-chain payment verification      |
+| `/api/escrow/create`            | POST   | Create escrow contract                |
+| `/api/escrow/release`           | POST   | Release escrow funds                  |
+| `/api/jobs`                     | GET    | List jobs and bounties                |
+| `/api/auth/login`               | POST   | Auth (Privy/Clerk, wallet, social)    |
+
+<!-- Add more endpoints as needed from your backend/API code -->
+
+---
+
 ## 🔮 Roadmap
 
-- [x] Initial UI Design & "Antigravity" Theme
-- [x] Backend FTSO Price Feed Integration
-- [x] Live Charts Page
-- [ ] Smart Contract Audits
-- [ ] Mainnet Launch on Flare
+- [x] "Antigravity"-themed UI
+- [x] FTSO price feed integration
+- [x] Live Charts page
+- [ ] Smart contract audits & security hardening
+- [ ] Mainnet launch (Flare Network)
+- [ ] Reputation & Rating system
+- [ ] Mobile responsive app
 
 ---
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please open an issue or submit a pull request.
+We welcome contributors!
+- Open issues for bugs, ideas, or feature requests.
+- Submit pull requests.
+- See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+---
 
 ## 📄 License
 
-This project is licensed under the MIT License.
+MIT License. See [LICENSE](LICENSE) for details.
+
+---
+
+**Demo:** [Try ChainMatrix](https://chainmatrix-demo-link.com) <!-- Replace with your live demo URL -->
