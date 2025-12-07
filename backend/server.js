@@ -93,6 +93,57 @@ app.get('/api/ftso/convert-usd-to-token', async (req, res) => {
 });
 
 // ============================================================================
+// FTSO Price Oracle Endpoints (Real Implementation)
+// ============================================================================
+
+const COSTON_RPC = 'https://coston2-api.flare.network/ext/C/rpc';
+const FTSO_ADDRESS = '0x3d893C53D9e8056135C26C8c638B76C8b60Df726';
+const FTSO_ABI = [
+  'function getFeedsById(bytes21[] calldata _feedIds) external view returns (uint256[] memory _values, int8[] memory _decimals, uint256 _timestamp)'
+];
+
+const FEED_IDS = [
+  '0x01464c522f55534400000000000000000000000000', // FLR
+  '0x014254432f55534400000000000000000000000000', // BTC
+  '0x015852502f55534400000000000000000000000000'  // XRP
+];
+
+const SYMBOLS = ['FLR', 'BTC', 'XRP'];
+
+/**
+ * GET /api/ftso/prices
+ * Get live prices from Flare Coston2 FTSO
+ * @returns {object} { FLR: { price: number }, BTC: { price: number }, XRP: { price: number } }
+ */
+app.get('/api/ftso/prices', async (req, res) => {
+  try {
+    const provider = new ethers.JsonRpcProvider(COSTON_RPC);
+    const contract = new ethers.Contract(FTSO_ADDRESS, FTSO_ABI, provider);
+
+    const [values, decimals, timestamp] = await contract.getFeedsById(FEED_IDS);
+
+    const prices = {};
+
+    for (let i = 0; i < values.length; i++) {
+      const val = Number(values[i]);
+      const dec = Number(decimals[i]);
+      const price = val * Math.pow(10, -dec); // Standard formula: value * 10^-decimals
+
+      prices[SYMBOLS[i]] = {
+        price: price,
+        decimals: dec,
+        raw: values[i].toString()
+      };
+    }
+
+    res.json(prices);
+  } catch (error) {
+    console.error('FTSO prices error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// ============================================================================
 // FAssets Bridge Verification Endpoints
 // ============================================================================
 

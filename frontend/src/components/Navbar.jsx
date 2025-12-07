@@ -25,7 +25,7 @@ export default function Navbar() {
     { name: "Home", path: "/" },
     { name: "Browse Tasks", path: "/contributor" },
     { name: "Create Bounty", path: "/host" },
-    { name: "About", path: "/about" },
+    { name: "Live Charts", path: "/live-charts" },
     { name: "Help Center", path: "/help" },
   ];
 

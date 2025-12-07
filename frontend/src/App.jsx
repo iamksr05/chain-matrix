@@ -8,7 +8,7 @@ import TaskDetail from "./pages/TaskDetail";
 import ContributorDashboard from "./pages/ContributorDashboard";
 import HostDashboard from "./pages/HostDashboard";
 import FreelancerHub from "./pages/FreelancerHub";
-import About from "./pages/About";
+import LiveCharts from "./pages/LiveCharts";
 import HelpCenter from "./pages/HelpCenter";
 import Profile from "./pages/Profile";
 import Onboarding from "./pages/Onboarding";
@@ -37,7 +37,7 @@ function App() {
             <Route path="/hub" element={<FreelancerHub />} />
             <Route path="/contributor" element={<ContributorDashboard />} />
             <Route path="/host" element={<HostDashboard />} />
-            <Route path="/about" element={<About />} />
+            <Route path="/live-charts" element={<LiveCharts />} />
             <Route path="/help" element={<HelpCenter />} />
             <Route path="/task/:taskId" element={<TaskDetail />} />
             <Route path="/profile" element={<Profile />} />
