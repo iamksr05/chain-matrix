@@ -98,29 +98,44 @@ app.get('/api/ftso/convert-usd-to-token', async (req, res) => {
 
 const COSTON_RPC = 'https://coston2-api.flare.network/ext/C/rpc';
 const FTSO_ADDRESS = '0x3d893C53D9e8056135C26C8c638B76C8b60Df726';
+
+
 const FTSO_ABI = [
   'function getFeedsById(bytes21[] calldata _feedIds) external view returns (uint256[] memory _values, int8[] memory _decimals, uint256 _timestamp)'
 ];
 
-const FEED_IDS = [
+// Helper to create Feed ID: 0x01 + Hex(Symbol) + Padding
+// FLR: 46 4c 52 -> 0x01464c52...
+// BTC: 42 54 43 -> 0x01425443...
+// XRP: 58 52 50 -> 0x01585250...
+// ETH: 45 54 48 -> 0x01455448...
+// SOL: 53 4f 4c -> 0x01534f4c...
+// BNB: 42 4e 42 -> 0x01424e42...
+// DOGE: 44 4f 47 45 -> 0x01444f4745...
+
+const PROD_FEED_IDS = [
   '0x01464c522f55534400000000000000000000000000', // FLR
   '0x014254432f55534400000000000000000000000000', // BTC
-  '0x015852502f55534400000000000000000000000000'  // XRP
+  '0x015852502f55534400000000000000000000000000', // XRP
+  '0x014554482f55534400000000000000000000000000', // ETH
+  '0x01534f4c2f55534400000000000000000000000000', // SOL
+  '0x01424e422f55534400000000000000000000000000', // BNB
+  '0x01444f47452f555344000000000000000000000000'  // DOGE
 ];
 
-const SYMBOLS = ['FLR', 'BTC', 'XRP'];
+const SYMBOLS = ['FLR', 'BTC', 'XRP', 'ETH', 'SOL', 'BNB', 'DOGE'];
 
 /**
  * GET /api/ftso/prices
  * Get live prices from Flare Coston2 FTSO
- * @returns {object} { FLR: { price: number }, BTC: { price: number }, XRP: { price: number } }
+ * @returns {object} { FLR: { price: number }, ... }
  */
 app.get('/api/ftso/prices', async (req, res) => {
   try {
     const provider = new ethers.JsonRpcProvider(COSTON_RPC);
     const contract = new ethers.Contract(FTSO_ADDRESS, FTSO_ABI, provider);
 
-    const [values, decimals, timestamp] = await contract.getFeedsById(FEED_IDS);
+    const [values, decimals, timestamp] = await contract.getFeedsById(PROD_FEED_IDS);
 
     const prices = {};
 

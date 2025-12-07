@@ -1,43 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { Activity, ArrowLeft, TrendingUp, TrendingDown, Zap, ShieldCheck, Globe } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { AreaChart, Area, XAxis, YAxis, ResponsiveContainer, Tooltip } from "recharts";
+import config from "../config";
 
 const COINS = [
-    {
-        symbol: "BTC",
-        name: "Bitcoin",
-        basePrice: 45000,
-        color: "text-orange-500",
-        bg: "from-orange-500/10 to-transparent",
-        border: "border-orange-500/20",
-        icon: "₿"
-    },
-    {
-        symbol: "XRP",
-        name: "XRP",
-        basePrice: 0.60,
-        color: "text-cyan-400",
-        bg: "from-cyan-400/10 to-transparent",
-        border: "border-cyan-400/20",
-        icon: "✕"
-    },
-    {
-        symbol: "FLR",
-        name: "Flare",
-        basePrice: 0.03,
-        color: "text-pink-500",
-        bg: "from-pink-500/10 to-transparent",
-        border: "border-pink-500/20",
-        icon: "☀️"
-    }
+    { symbol: "BTC", name: "Bitcoin", basePrice: 45000, color: "#f97316", bg: "from-orange-500/10 to-transparent", border: "border-orange-500/20", icon: "₿" },
+    { symbol: "ETH", name: "Ethereum", basePrice: 2500, color: "#6366f1", bg: "from-indigo-500/10 to-transparent", border: "border-indigo-500/20", icon: "Ξ" },
+    { symbol: "XRP", name: "XRP", basePrice: 0.60, color: "#22d3ee", bg: "from-cyan-400/10 to-transparent", border: "border-cyan-400/20", icon: "✕" },
+    { symbol: "FLR", name: "Flare", basePrice: 0.03, color: "#ec4899", bg: "from-pink-500/10 to-transparent", border: "border-pink-500/20", icon: "☀️" },
+    { symbol: "SOL", name: "Solana", basePrice: 100, color: "#a855f7", bg: "from-purple-500/10 to-transparent", border: "border-purple-500/20", icon: "◎" },
+    { symbol: "BNB", name: "BNB", basePrice: 300, color: "#eab308", bg: "from-yellow-500/10 to-transparent", border: "border-yellow-500/20", icon: "▣" },
 ];
-
-import config from "../config";
 
 export default function LiveCharts() {
     const navigate = useNavigate();
     const [prices, setPrices] = useState({});
+    // History state: { BTC: [{time, price}, ...], ... }
+    const [history, setHistory] = useState({});
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -46,6 +27,8 @@ export default function LiveCharts() {
                 const query = COINS.map(c => c.symbol).join(",");
                 const res = await fetch(`${config.apiUrl}/api/ftso/prices?symbols=${query}`);
                 const data = await res.json();
+
+                const now = new Date().toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
                 setPrices(prev => {
                     const updated = {};
@@ -65,6 +48,22 @@ export default function LiveCharts() {
                     });
                     return updated;
                 });
+
+                // Update history
+                setHistory(prev => {
+                    const newHistory = { ...prev };
+                    COINS.forEach(coin => {
+                        const currentPrice = data[coin.symbol]?.price;
+                        if (currentPrice) {
+                            const coinHist = newHistory[coin.symbol] || Array(10).fill({ price: currentPrice * 0.99 }); // Fill initial dummy data for smoothness
+                            const newPoint = { time: now, price: currentPrice };
+                            // Keep last 20 points
+                            newHistory[coin.symbol] = [...coinHist, newPoint].slice(-20);
+                        }
+                    });
+                    return newHistory;
+                });
+
                 setLoading(false);
             } catch (err) {
                 console.error("FTSO fetch failed:", err);
@@ -73,7 +72,7 @@ export default function LiveCharts() {
         };
 
         fetchPrices();
-        const interval = setInterval(fetchPrices, 5000);
+        const interval = setInterval(fetchPrices, 3000); // Poll every 3 seconds for more "live" feel
         return () => clearInterval(interval);
     }, []);
 
@@ -126,10 +125,11 @@ export default function LiveCharts() {
                 </div>
 
                 {/* Crypto Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-24">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-24">
                     {COINS.map((coin, index) => {
                         const data = prices[coin.symbol] || { price: coin.basePrice, change: 0, trend: "up" };
                         const isUp = data.trend === "up";
+                        const chartData = history[coin.symbol] || [];
 
                         return (
                             <motion.div
@@ -137,9 +137,9 @@ export default function LiveCharts() {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: index * 0.1 + 0.2 }}
-                                className={`relative group p-8 rounded-3xl border bg-gradient-to-b ${coin.bg} ${coin.border} backdrop-blur-xl transition-transform duration-300 hover:-translate-y-1`}
+                                className={`relative group p-6 rounded-3xl border bg-gradient-to-b ${coin.bg} ${coin.border} backdrop-blur-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-${coin.color}/20`}
                             >
-                                <div className="flex items-start justify-between mb-8">
+                                <div className="flex items-start justify-between mb-4">
                                     <div className="flex items-center gap-4">
                                         <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-2xl bg-black/40 border border-white/5 shadow-inner`}>
                                             {coin.icon}
@@ -151,22 +151,45 @@ export default function LiveCharts() {
                                     </div>
                                     <div className={`px-3 py-1 rounded-full text-xs font-bold border ${isUp ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' : 'bg-rose-500/10 border-rose-500/20 text-rose-400'} flex items-center gap-1`}>
                                         {isUp ? <TrendingUp size={14} /> : <TrendingDown size={14} />}
-                                        {(Math.abs(data.change / (data.price || 1) * 100)).toFixed(2)}%
+                                        {/* Avoid div by zero */}
+                                        {((Math.abs(data.change) / (data.price || 1)) * 100).toFixed(2)}%
                                     </div>
                                 </div>
 
-                                <div className="space-y-2">
+                                <div className="space-y-1 mb-6">
                                     <div className="text-4xl font-mono font-bold tracking-tighter text-white">
-                                        ${data.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                        ${data.price.toLocaleString(undefined, { minimumFractionDigits: coin.basePrice < 1 ? 4 : 2, maximumFractionDigits: coin.basePrice < 1 ? 4 : 2 })}
                                     </div>
-                                    <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
-                                        <motion.div
-                                            initial={{ width: 0 }}
-                                            animate={{ width: "100%" }}
-                                            transition={{ duration: 1.5, ease: "circOut" }}
-                                            className={`h-full ${isUp ? 'bg-emerald-500' : 'bg-rose-500'}`}
-                                        />
-                                    </div>
+                                </div>
+
+                                {/* Mini Chart */}
+                                <div className="h-24 w-full bg-white/5 rounded-xl overflow-hidden relative">
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <AreaChart data={chartData}>
+                                            <defs>
+                                                <linearGradient id={`gradient-${coin.symbol}`} x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="0%" stopColor={coin.color} stopOpacity={0.4} />
+                                                    <stop offset="100%" stopColor={coin.color} stopOpacity={0} />
+                                                </linearGradient>
+                                            </defs>
+                                            <XAxis dataKey="time" hide />
+                                            <YAxis domain={['auto', 'auto']} hide />
+                                            <Tooltip
+                                                contentStyle={{ backgroundColor: '#000', border: '1px solid #333', borderRadius: '8px' }}
+                                                itemStyle={{ color: '#fff' }}
+                                                labelStyle={{ display: 'none' }}
+                                                formatter={(value) => [`$${value}`, 'Price']}
+                                            />
+                                            <Area
+                                                type="monotone"
+                                                dataKey="price"
+                                                stroke={coin.color}
+                                                fill={`url(#gradient-${coin.symbol})`}
+                                                strokeWidth={2}
+                                                animationDuration={1000}
+                                            />
+                                        </AreaChart>
+                                    </ResponsiveContainer>
                                 </div>
 
                                 {/* Hover Glow */}
@@ -176,7 +199,7 @@ export default function LiveCharts() {
                     })}
                 </div>
 
-                {/* Stats / Info Section */}
+                {/* Stats / Info Section - Same as before */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <motion.div
                         initial={{ opacity: 0, x: -20 }}
