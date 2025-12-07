@@ -1,306 +1,145 @@
-# 🚀 DEvelopers Dojo - Decentralized Task Marketplace
+# ChainMatrix
 
-**DEvelopers Dojo** is a blockchain-powered platform where users can post tasks and get them completed by skilled individuals in their local area. Think of it as a decentralized TaskRabbit with crypto payments, location-based matching, and smart contract automation.
+**The First Decentralized Freight & Freelancing Marketplace on the Flare Network.**
 
-<img width="217" height="42" alt="flow" src="https://github.com/user-attachments/assets/9a842e1e-5fc2-493b-9a23-3516eda68cf6" />
-**Developed only on Flow -> mainnet address [0x41E658e3f4672F3F8215662Fc99B9F6909E8a201] thanks Jz for tokens**
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Status](https://img.shields.io/badge/status-active-success.svg)
+![Network](https://img.shields.io/badge/network-Flare-orange.svg)
 
-
-## 🌟 Features
-
-<img width="1709" height="1025" alt="Screenshot 2025-08-17 at 12 03 00 PM" src="https://github.com/user-attachments/assets/02e67dff-867b-4351-8885-e29c1932514d" />
-
-- **🔗 Blockchain Integration**: Smart contracts on Flare/Ethereum for secure, trustless transactions
-- **🔥 Flare Features**: FAssets (BTC/XRP payments), FDC (auto-release), FTSO (USD pricing), Smart Accounts (gasless)
-- **🗺️ Location-Based Matching**: Interactive maps to find tasks near you
-- **💼 Skill Categories**: Digital services, physical tasks, consulting, and more
-- **🔐 Wallet Integration**: Connect with MetaMask, WalletConnect, Privy, and other popular wallets
-- **💰 Multi-Token Payments**: Pay with FLR, BTC (FAsset), XRP (FAsset), ETH, or any supported token
-- **💵 USD Pricing**: Price tasks in USD with automatic token conversion via FTSO
-- **⚡ Gasless UX**: Optional gasless transactions via Flare Smart Accounts
-Build trust through completed tasks and reviews
-- **📱 Responsive Design**: Works seamlessly on desktop and mobile
-
-## 🏗️ Project Structure
-
-```
-developers-dojo/
-├── smart-contracts/         # Solidity smart contracts
-│   ├── contracts/
-│   │   ├── TaskEscrow.sol   # Base escrow contract
-│   │   └── FlareAdapter.sol # Flare feature adapter
-│   ├── test/               # Contract tests
-│   ├── scripts/            # Deployment scripts
-│   └── hardhat.config.js   # Hardhat configuration
-├── backend/                # Express API server
-│   ├── server.js           # Main server (FTSO, FDC, FAssets, Smart Accounts)
-│   ├── tests/              # API tests
-│   └── scripts/            # Utility scripts
-├── frontend/               # React + Vite frontend
-│   ├── src/
-│   │   ├── components/     # UI components
-│   │   ├── lib/            # Libraries (escrow, flare, etc.)
-│   │   └── pages/          # Application pages
-│   └── package.json        # Frontend dependencies
-├── supabase/
-│   └── migrations/         # Database migration scripts
-└── README.md              # This file
-```
-
-## 🚀 Quick Start
-
-### Prerequisites
-
-- Node.js (v16 or higher)
-- npm or yarn
-- MetaMask or another Web3 wallet
-
-### 1. Clone the Repository
-
-```bash
-git clone <your-repo-url>
-cd skillsnap
-```
-
-### 2. Setup Smart Contracts
-
-```bash
-cd smart-contracts
-npm install
-```
-
-Create `.env` file:
-```bash
-PRIVATE_KEY=your_private_key_here
-INFURA_API_KEY=your_infura_key_here
-ETHERSCAN_API_KEY=your_etherscan_key_here
-```
-
-Compile and test contracts:
-```bash
-npx hardhat compile
-npx hardhat test
-```
-
-Deploy to testnet:
-```bash
-npx hardhat run scripts/deploy.js --network sepolia
-```
-
-### 3. Setup Backend (New - Flare Integration)
-
-```bash
-cd ../backend
-npm install
-```
-
-Create `.env` file (see `backend/.env.example`):
-```bash
-FLARE_RPC=https://flare-api.flare.network/ext/C/rpc
-FTSO_ORACLE_ADDR=0x...
-FDC_ENDPOINT=https://api.flare.network/fdc
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_KEY=your-supabase-key
-SPONSOR_WALLET_PRIVATE_KEY=0x...  # For gasless transactions
-FLARE_ADAPTER_ADDRESS=0x...       # After deployment
-```
-
-Start backend server:
-```bash
-npm start
-# or for development with watch mode:
-npm run dev
-```
-
-### 4. Setup Frontend
-
-```bash
-cd ../frontend
-npm install
-```
-
-Create `.env` file (see `frontend/.env.example`):
-```bash
-VITE_MAPBOX_API=your_mapbox_token_here
-VITE_FLARE_ADAPTER_ADDRESS=0x...  # After deployment
-VITE_NETWORK_ID=16                # Flare Mainnet (114 for Coston testnet)
-VITE_API_URL=http://localhost:3000
-VITE_PRIVY_APP_ID=your-privy-app-id
-VITE_SUPABASE_URL=https://your-project.supabase.co
-VITE_SUPABASE_ANON_KEY=your-supabase-key
-```
-
-Start development server:
-```bash
-npm run dev
-```
-
-### 5. Run Database Migration
-
-Execute `supabase/migrations/add_flare_fields.sql` in your Supabase SQL Editor to add Flare-specific columns.
-
-## 🔧 Configuration
-
-### Environment Variables
-
-#### Smart Contracts (.env)
-- `PRIVATE_KEY`: Your wallet private key for deployment
-- `INFURA_API_KEY`: Infura project API key
-- `ETHERSCAN_API_KEY`: For contract verification
-
-#### Frontend (.env)
-- `VITE_MAPBOX_API`: Mapbox access token for maps
-- `VITE_CONTRACT_ADDRESS`: Deployed smart contract address
-- `VITE_NETWORK_ID`: Ethereum network ID (11155111 for Sepolia)
-
-### API Keys Setup
-
-1. **Mapbox**: Get a free API key at [mapbox.com](https://www.mapbox.com/)
-2. **Infura**: Create a project at [infura.io](https://infura.io/)
-3. **Etherscan**: Get API key at [etherscan.io](https://etherscan.io/apis)
-
-## 🔥 Flare Integration
-
-This project now includes comprehensive Flare blockchain features:
-
-### Features
-
-- **FAssets**: Pay with wrapped non-EVM assets (BTC, XRP) via bridge
-- **FDC (Flare Data Connector)**: Off-chain verification triggers on-chain auto-release
-- **FTSO (Flare Time Series Oracle)**: USD ↔ Token price conversion for flexible pricing
-- **Smart Accounts**: Gasless transactions via Account Abstraction
-
-### Documentation
-
-See **[FLARE_INTEGRATION.md](./FLARE_INTEGRATION.md)** for detailed setup and usage instructions.
-
-### Quick Example
-
-```javascript
-// Price task in USD, automatically converts to FLR via FTSO
-const result = await convertUSDToToken(100, 'FLR');
-// Returns: { totalAmount: "10500", rate: "0.01", ... }
-
-// Fund escrow with native FLR or FAsset
-await fundEscrowFlare(task, false); // useGasless = false
-await fundEscrowFAsset(task, fassetBTCAddress);
-
-// FDC auto-release when condition is met
-await registerFDCCondition(taskId, conditionHash);
-// FDC oracle calls releaseIf() automatically
-```
-
-## 📋 Smart Contract Features
-
-### Core Functions (TaskEscrow)
-
-- `fund(taskId, worker)`: Deposit escrow funds
-- `release(taskId)`: Release funds to worker
-- `cancel(taskId)`: Refund to poster
-
-### Flare Features (FlareAdapter)
-
-- `fundNative(taskId, worker, tokenType)`: Fund with native FLR
-- `fundFAsset(token, taskId, worker, amount)`: Fund with FAsset (ERC20)
-- `registerCondition(taskId, conditionHash)`: Register FDC condition
-- `releaseIf(conditionHash)`: FDC-triggered auto-release (oracle only)
-
-### Security Features
-
-- Escrow system for secure payments
-- Role-based access control (FDC oracle)
-- Minimal on-chain logic (adapter pattern)
-- Standard escrow invariants enforced
-
-## 🎯 Usage Examples
-
-### Posting a Task
-
-```javascript
-// Frontend interaction
-const tx = await skillSnapContract.createTask(
-  "Help me move furniture",
-  "Need help moving couch and boxes",
-  "Boston, MA",
-  "Physical",
-  deadline,
-  { value: ethers.utils.parseEther("0.05") }
-);
-```
-
-### Accepting a Task
-
-```javascript
-const tx = await skillSnapContract.acceptTask(taskId);
-```
-
-## 🛣️ Roadmap
-
-- [ ] **Phase 1**: Core marketplace functionality ✅
-- [ ] **Phase 2**: Reputation system and reviews
-- [ ] **Phase 3**: Multi-token payments (USDC, DAI)
-- [ ] **Phase 4**: Mobile app (React Native)
-- [ ] **Phase 5**: DAO governance for disputes
-- [ ] **Phase 6**: Integration with major gig platforms
-
-## 🤝 Contributing
-
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
-
-### Development Setup
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/your-feature`
-3. Commit changes: `git commit -am 'Add some feature'`
-4. Push to branch: `git push origin feature/your-feature`
-5. Submit a pull request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🔍 Testing
-
-### Smart Contracts
-```bash
-cd smart-contracts
-npx hardhat test
-npx hardhat coverage
-```
-
-### Frontend
-```bash
-cd frontend
-npm test
-npm run test:e2e
-```
-
-## 📊 Architecture
-
-```mermaid
-graph TB
-    A[User] --> B[React Frontend]
-    B --> C[Ethers.js]
-    C --> D[SkillSnap Contract]
-    D --> E[Ethereum Blockchain]
-    B --> F[Mapbox Maps]
-    B --> G[Wallet Provider]
-```
-
-## 🆘 Support
-
-- **Documentation**: [docs.skillsnap.dev](https://docs.skillsnap.dev)
-- **Discord**: [Join our community](https://discord.gg/skillsnap)
-- **Twitter**: [@SkillSnapDeFi](https://twitter.com/SkillSnapDeFi)
-- **Email**: support@skillsnap.dev
-
-## 🏆 Acknowledgments
-
-- OpenZeppelin for secure smart contract patterns
-- Hardhat for development framework
-- React and Vite for frontend framework
-- Mapbox for location services
+ChainMatrix is a next-generation decentralized application (dApp) that revolutionizes how talent is hired and how bounties are settled. Powered by the **Flare Network**, it utilizes **Smart Accounts** for gasless transactions, the **FTSO (Flare Time Series Oracle)** for real-time price feeds, and the **FDC (Flare Data Connector)** for trustless cross-chain verification.
 
 ---
 
-**Built with ❤️ for the decentralized future**
+## 🚀 Key Features
+
+*   **🛡️ Trustless Escrow**: Funds are locked in smart contracts and only released when work is verified.
+*   **📈 Live Market Intelligence**: Real-time crypto asset pricing (BTC, XRP, FLR) powered by the FTSO.
+*   **🌉 Cross-Chain Payments**: Verify transactions from Bitcoin, XRP, and other chains using the Flare Data Connector (FDC).
+*   **⛽ Gasless Ease**: Users interact with the blockchain without holding native tokens, thanks to Account Abstraction (Smart Accounts).
+*   **🎨 Premium UI**: A stunning, "Antigravity" themed interface built with React, Tailwind, and Framer Motion.
+
+---
+
+## 🛠️ Technology Stack
+
+### Frontend
+*   **Framework**: [Vite](https://vitejs.dev/) + [React](https://reactjs.org/)
+*   **Styling**: [Tailwind CSS](https://tailwindcss.com/) + Vanilla CSS
+*   **Animation**: [Framer Motion](https://www.framer.com/motion/)
+*   **Auth**: [Privy](https://www.privy.io/) (Wallet) + [Clerk](https://clerk.com/) (Social)
+*   **Icons**: [Lucide React](https://lucide.dev/)
+
+### Backend
+*   **Runtime**: [Node.js](https://nodejs.org/)
+*   **Server**: [Express](https://expressjs.com/)
+*   **Database**: [Supabase](https://supabase.com/)
+*   **Blockchain Interaction**: [Ethers.js v6](https://docs.ethers.org/v6/)
+
+### Smart Contracts
+*   **Network**: Flare / Coston2 Testnet
+*   **Framework**: [Hardhat](https://hardhat.org/)
+*   **Language**: Solidity 0.8.x
+
+---
+
+## 📂 Project Structure
+
+```bash
+chain-matrix/
+├── backend/            # Express server for FTSO/FDC/FAssets API
+├── frontend/           # React + Vite application
+├── smart-contracts/    # Hardhat project for Escrow & Token contracts
+├── supabase/           # Database migrations and config
+└── README.md           # You are here
+```
+
+---
+
+## ⚡ Getting Started
+
+### Prerequisites
+*   Node.js (v18+)
+*   Git
+*   A Flare/Coston2 wallet private key (for deployment)
+
+### 1. Installation
+
+Clone the repository and install dependencies for all workspaces:
+
+```bash
+git clone https://github.com/yourusername/chain-matrix.git
+cd chain-matrix
+
+# Install Frontend Dependencies
+cd frontend && npm install
+
+# Install Backend Dependencies
+cd ../backend && npm install
+
+# Install Smart Contract Dependencies
+cd ../smart-contracts && npm install
+```
+
+### 2. Environment Setup
+
+Create `.env` files in each directory based on the examples.
+
+**Backend (`backend/.env`):**
+```env
+FLARE_RPC=https://coston2-api.flare.network/ext/C/rpc
+FTSO_ORACLE_ADDR=0x3d893C53D9e8056135C26C8c638B76C8b60Df726
+SUPABASE_URL=your_supabase_url
+SUPABASE_KEY=your_supabase_key
+PORT=3000
+```
+
+**Frontend (`frontend/.env`):**
+```env
+VITE_API_URL=http://localhost:3000
+VITE_CLERK_PUBLISHABLE_KEY=your_clerk_key
+VITE_PRIVY_APP_ID=your_privy_id
+```
+
+### 3. Running Locally
+
+Run each component in a separate terminal:
+
+**Backend:**
+```bash
+cd backend
+npm run dev
+# Server running on http://localhost:3000
+```
+
+**Frontend:**
+```bash
+cd frontend
+npm run dev
+# App running on http://localhost:5173
+```
+
+**Smart Contracts (Local Node):**
+```bash
+cd smart-contracts
+npx hardhat node
+```
+
+---
+
+## 🔮 Roadmap
+
+- [x] Initial UI Design & "Antigravity" Theme
+- [x] Backend FTSO Price Feed Integration
+- [x] Live Charts Page
+- [ ] Smart Contract Audits
+- [ ] Mainnet Launch on Flare
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please open an issue or submit a pull request.
+
+## 📄 License
+
+This project is licensed under the MIT License.
