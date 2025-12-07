@@ -12,7 +12,7 @@
 
 ChainMatrix is an innovative decentralized marketplace that empowers freight shipping and freelancing through blockchain technology. By leveraging the Flare Network, ChainMatrix introduces trustless transactions, escrow, cross-chain payments, and gasless user onboarding—all via modern, secure, and scalable architecture.
 
-> **Demo:** [View Live Demo](https://chainmatrix-demo-link.com) <!-- Replace with actual demo link -->
+> **Demo:** [View Live Demo](https://chain-matrix.vercel.app/) <!-- Replace with actual demo link -->
 
 ---
 
@@ -202,4 +202,4 @@ MIT License. See [LICENSE](LICENSE) for details.
 
 ---
 
-**Demo:** [Try ChainMatrix](https://chainmatrix-demo-link.com) <!-- Replace with your live demo URL -->
+**Demo:** [Try ChainMatrix](https://chain-matrix.vercel.app/) <!-- Replace with your live demo URL -->
